@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    overscroll-behavior-y: none;
+    background-color: #f5f5f4;
+  }
+
+  /* iOS 安全영역 대응 */
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* 입력 필드 iOS 줌 방지 */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+  }
+
+  /* 카드 그림자 (브루털리즘 스타일) */
+  .shadow-brut {
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.9);
+  }
+  .shadow-brut-sm {
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.9);
+  }
+  .shadow-brut-lg {
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* PWA 설치 후 스플래시 배경 (iOS) */
+@media (display-mode: standalone) {
+  body {
+    background-color: #1c1917;
+  }
+}
