@@ -106,14 +106,14 @@ function FlashcardView({ items, progress, onMark, currentIdx, setCurrentIdx }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-4 px-1">
-        <div className="flex items-center gap-3">
+    <div className="max-w-2xl mx-auto flex flex-col h-full">
+      <div className="flex items-center justify-between mb-2 px-1 flex-shrink-0">
+        <div className="flex items-center gap-2">
           <CategoryBadge cat={item.cat} size="sm" />
-          <span className="font-mono text-xs text-stone-500 tracking-wider">{item.id}</span>
+          <span className="font-mono text-[10px] text-stone-500 tracking-wider">{item.id}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs text-stone-500">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[10px] text-stone-500">
             {currentIdx + 1} / {items.length}
           </span>
           <CMYKDots progress={studyCount / 5} />
@@ -121,72 +121,71 @@ function FlashcardView({ items, progress, onMark, currentIdx, setCurrentIdx }) {
       </div>
 
       <div
-        className="relative bg-white border-2 border-stone-900 rounded-sm shadow-brut cursor-pointer select-none transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut-lg active:translate-x-0 active:translate-y-0"
+        className="relative bg-white border-2 border-stone-900 rounded-sm shadow-brut cursor-pointer select-none transition-all active:translate-x-0 active:translate-y-0 flex-1 flex flex-col overflow-hidden"
         onClick={() => setFlipped(!flipped)}
-        style={{ minHeight: '380px' }}
       >
         <div
-          className="absolute top-0 left-0 right-0 h-2"
+          className="absolute top-0 left-0 right-0 h-1.5 flex-shrink-0"
           style={{ backgroundColor: cat.color }}
         />
 
         {!flipped ? (
-          <div className="p-8 pt-12 flex flex-col items-center justify-center text-center" style={{ minHeight: '380px' }}>
-            <div className="text-xs font-mono tracking-[0.3em] text-stone-400 mb-3">韓 KOREAN</div>
-            <h2 className="text-5xl md:text-6xl font-black mb-3 tracking-tight">
+          <div className="p-6 pt-8 flex flex-col items-center justify-center text-center flex-1">
+            <div className="text-[10px] font-mono tracking-[0.3em] text-stone-400 mb-3">韓 KOREAN</div>
+            <h2 className="text-5xl font-black mb-3 tracking-tight leading-none">
               {item.ko}
             </h2>
             {item.ko_hanja && (
-              <div className="text-2xl text-stone-500 font-serif mb-2">{item.ko_hanja}</div>
+              <div className="text-xl text-stone-500 font-serif mb-2">{item.ko_hanja}</div>
             )}
             {item.ko_alt && (
-              <div className="text-sm text-stone-500 italic">별칭: {item.ko_alt}</div>
+              <div className="text-xs text-stone-500 italic">별칭: {item.ko_alt}</div>
             )}
-            <div className="mt-8 text-xs text-stone-400 font-mono tracking-wider">TAP TO REVEAL ▾</div>
+            <div className="mt-6 text-[10px] text-stone-400 font-mono tracking-wider">TAP TO REVEAL ▾</div>
           </div>
         ) : (
-          <div className="p-6 pt-10 space-y-4" style={{ minHeight: '380px' }}>
-            <div className="border-b border-stone-200 pb-3">
-              <div className="text-xs font-mono tracking-[0.2em] text-stone-400 mb-1">中 CHINESE</div>
-              <div className="text-2xl font-bold">{item.zh}</div>
-              <div className="text-sm text-stone-500 italic font-mono">{item.zh_pinyin}</div>
+          <div className="p-4 pt-6 space-y-2.5 flex-1 overflow-y-auto">
+            <div className="border-b border-stone-200 pb-2">
+              <div className="text-[10px] font-mono tracking-[0.2em] text-stone-400 mb-0.5">中 CHINESE</div>
+              <div className="text-xl font-bold leading-tight">{item.zh}</div>
+              <div className="text-xs text-stone-500 italic font-mono">{item.zh_pinyin}</div>
             </div>
 
-            <div className="border-b border-stone-200 pb-3">
-              <div className="text-xs font-mono tracking-[0.2em] text-stone-400 mb-1">日 JAPANESE</div>
-              <div className="text-2xl font-bold">{item.ja}</div>
-              <div className="text-sm text-stone-500 font-mono">
+            <div className="border-b border-stone-200 pb-2">
+              <div className="text-[10px] font-mono tracking-[0.2em] text-stone-400 mb-0.5">日 JAPANESE</div>
+              <div className="text-xl font-bold leading-tight">{item.ja}</div>
+              <div className="text-xs text-stone-500 font-mono">
                 {item.ja_kana} · <span className="italic">{item.ja_romaji}</span>
               </div>
             </div>
 
-            <div className="border-b border-stone-200 pb-3">
-              <div className="flex items-baseline justify-between mb-1">
-                <span className="text-xs font-mono tracking-[0.2em] text-stone-400">EN 🇺🇸 US</span>
+            <div className="border-b border-stone-200 pb-2">
+              <div className="flex items-baseline justify-between mb-0.5">
+                <span className="text-[10px] font-mono tracking-[0.2em] text-stone-400">EN 🇺🇸 US</span>
                 {item.en_ipa && (
-                  <span className="text-xs text-stone-400 font-mono">{item.en_ipa}</span>
+                  <span className="text-[10px] text-stone-400 font-mono">{item.en_ipa}</span>
                 )}
               </div>
-              <div className="text-2xl font-bold">{item.en_us}</div>
+              <div className="text-xl font-bold leading-tight">{item.en_us}</div>
               {item.en_ko && (
-                <div className="text-sm text-stone-500">[{item.en_ko}]</div>
+                <div className="text-xs text-stone-500">[{item.en_ko}]</div>
               )}
             </div>
 
             {(item.en_gb || item.en_au) && (
-              <div className="rounded-sm p-3 bg-amber-50 border-l-4 border-amber-500">
-                <div className="text-xs font-mono tracking-[0.2em] text-amber-800 mb-1">⚠ 영국/호주 차이</div>
+              <div className="rounded-sm p-2 bg-amber-50 border-l-4 border-amber-500">
+                <div className="text-[10px] font-mono tracking-[0.2em] text-amber-800 mb-0.5">⚠ 영국/호주 차이</div>
                 {item.en_gb && (
-                  <div className="text-sm"><span className="font-bold text-amber-900">🇬🇧 UK:</span> {item.en_gb}</div>
+                  <div className="text-xs"><span className="font-bold text-amber-900">🇬🇧 UK:</span> {item.en_gb}</div>
                 )}
                 {item.en_au && (
-                  <div className="text-sm"><span className="font-bold text-amber-900">🇦🇺 AU:</span> {item.en_au}</div>
+                  <div className="text-xs"><span className="font-bold text-amber-900">🇦🇺 AU:</span> {item.en_au}</div>
                 )}
               </div>
             )}
 
             {item.note && (
-              <div className="text-xs text-stone-600 italic pt-1 leading-relaxed">
+              <div className="text-[11px] text-stone-600 italic pt-1 leading-relaxed">
                 💡 {item.note}
               </div>
             )}
@@ -194,7 +193,7 @@ function FlashcardView({ items, progress, onMark, currentIdx, setCurrentIdx }) {
         )}
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-3">
+      <div className="mt-3 flex items-center justify-between gap-2 flex-shrink-0">
         <button
           onClick={prev}
           className="p-3 border-2 border-stone-900 bg-white hover:bg-stone-100 rounded-sm transition-colors"
@@ -228,7 +227,7 @@ function FlashcardView({ items, progress, onMark, currentIdx, setCurrentIdx }) {
       </div>
 
       {status !== 'new' && (
-        <div className="mt-3 text-center text-xs font-mono text-stone-500 tracking-wider">
+        <div className="mt-1.5 text-center text-[10px] font-mono text-stone-500 tracking-wider flex-shrink-0">
           {status === 'easy' ? '✓ 학습 완료' : '↻ 복습 필요'} · 학습 {studyCount}회
         </div>
       )}
@@ -741,84 +740,81 @@ export default function App() {
   }, [progress]);
 
   return (
-    <div className="min-h-screen bg-stone-100 pb-12">
+    <div className="h-screen bg-stone-100 flex flex-col overflow-hidden">
       {/* PWA 설치 배너 */}
       {!installDismissed && <InstallBanner onDismiss={dismissInstall} />}
 
       {/* 오프라인 인디케이터 */}
       {isOffline && (
-        <div className="bg-amber-500 text-stone-900 px-4 py-1.5 text-xs font-bold flex items-center justify-center gap-2">
-          <WifiOff className="w-3.5 h-3.5" />
-          오프라인 모드 (학습은 정상 동작)
+        <div className="bg-amber-500 text-stone-900 px-4 py-1 text-[11px] font-bold flex items-center justify-center gap-2 flex-shrink-0">
+          <WifiOff className="w-3 h-3" />
+          오프라인 모드
         </div>
       )}
 
-      {/* Header */}
-      <header className="bg-stone-900 text-white sticky top-0 z-20 border-b-4 border-stone-900">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-baseline gap-3">
-            <h1 className="text-lg md:text-xl font-black tracking-tight">印刷</h1>
-            <span className="text-xs font-mono tracking-[0.3em] text-stone-400 hidden sm:inline">PRINTING TERMS · KO·中·日·EN</span>
-            <span className="text-xs font-mono tracking-[0.2em] text-stone-400 sm:hidden">GLOSSARY</span>
+      {/* Compact Header */}
+      <header className="bg-stone-900 text-white flex-shrink-0">
+        <div className="max-w-5xl mx-auto px-3 pt-2 flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-base font-black tracking-tight">印刷</h1>
+            <span className="text-[10px] font-mono tracking-[0.2em] text-stone-400">GLOSSARY</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 text-xs font-mono">
-              <span className="text-stone-400">진도</span>
-              <span className="font-black text-white">{stats.learned}/{stats.total}</span>
-              <span className="text-emerald-400">({stats.pct}%)</span>
-            </div>
+          <div className="flex items-center gap-2 text-[11px] font-mono">
+            <span className="text-stone-400">{stats.learned}/{stats.total}</span>
+            <span className="text-emerald-400">({stats.pct}%)</span>
             <CMYKDots progress={stats.pct / 100} />
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-2 flex">
+        <div className="max-w-5xl mx-auto px-1 flex">
           {[
             { id: 'flashcard', label: '단어카드', icon: BookOpen },
             { id: 'quiz', label: '퀴즈', icon: Brain },
             { id: 'search', label: '검색', icon: Search },
+            { id: 'stats', label: '통계', icon: BarChart3 },
           ].map(t => (
             <button
               key={t.id}
               onClick={() => setMode(t.id)}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold tracking-wide border-b-4 transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-bold tracking-wide border-b-2 transition-colors ${
                 mode === t.id
                   ? 'border-amber-400 text-white'
-                  : 'border-transparent text-stone-400 hover:text-stone-200'
+                  : 'border-transparent text-stone-400'
               }`}
             >
-              <t.icon className="w-4 h-4" />
+              <t.icon className="w-3.5 h-3.5" />
               {t.label}
             </button>
           ))}
         </div>
       </header>
 
-      {/* Sub toolbar */}
-      <div className="bg-white border-b-2 border-stone-200 sticky top-[97px] z-10">
-        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center gap-2 flex-wrap">
+      {/* Sub toolbar - compact */}
+      <div className="bg-white border-b border-stone-200 flex-shrink-0">
+        <div className="max-w-5xl mx-auto px-3 py-1.5 flex items-center gap-1.5">
           <button
             onClick={() => setShowFilter(!showFilter)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold tracking-wider bg-white border-2 border-stone-900 rounded-sm hover:bg-stone-100"
+            className="flex items-center gap-1 px-2 py-1 text-[11px] font-mono font-bold tracking-wider bg-white border border-stone-900 rounded-sm"
           >
-            <Filter className="w-3.5 h-3.5" />
+            <Filter className="w-3 h-3" />
             {selectedCats.length}/9
           </button>
           {mode === 'flashcard' && (
             <button
               onClick={() => { setShuffleSeed(Date.now()); setCurrentIdx(0); }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold tracking-wider bg-white border-2 border-stone-300 rounded-sm hover:border-stone-900 hover:bg-stone-100"
+              className="flex items-center gap-1 px-2 py-1 text-[11px] font-mono font-bold tracking-wider bg-white border border-stone-300 rounded-sm"
             >
-              <Shuffle className="w-3.5 h-3.5" />
+              <Shuffle className="w-3 h-3" />
               섞기
             </button>
           )}
-          <div className="ml-auto text-xs font-mono text-stone-500">
+          <div className="ml-auto text-[11px] font-mono text-stone-500">
             {filteredItems.length} terms
           </div>
         </div>
 
         {showFilter && (
-          <div className="max-w-5xl mx-auto px-4 pb-3 flex flex-wrap gap-1.5">
+          <div className="max-w-5xl mx-auto px-3 pb-2 flex flex-wrap gap-1">
             {Object.entries(CATEGORIES).map(([cat, c]) => {
               const active = selectedCats.includes(cat);
               const count = DATA.filter(d => d.cat === cat).length;
@@ -826,24 +822,24 @@ export default function App() {
                 <button
                   key={cat}
                   onClick={() => toggleCat(cat)}
-                  className={`px-2.5 py-1 text-xs font-mono font-bold tracking-wider rounded-sm border-2 transition-all ${
+                  className={`px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider rounded-sm border transition-all ${
                     active ? 'border-stone-900 text-white' : 'border-stone-200 bg-white text-stone-500'
                   }`}
                   style={active ? { backgroundColor: c.color, borderColor: c.color } : {}}
                 >
-                  {cat} · {c.ko} ({count})
+                  {cat} ({count})
                 </button>
               );
             })}
             <button
               onClick={() => setSelectedCats(Object.keys(CATEGORIES))}
-              className="px-2.5 py-1 text-xs font-mono font-bold tracking-wider rounded-sm border-2 border-stone-300 bg-white hover:border-stone-900"
+              className="px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider rounded-sm border border-stone-300 bg-white"
             >
               전체
             </button>
             <button
               onClick={() => setSelectedCats([])}
-              className="px-2.5 py-1 text-xs font-mono font-bold tracking-wider rounded-sm border-2 border-stone-300 bg-white hover:border-stone-900"
+              className="px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider rounded-sm border border-stone-300 bg-white"
             >
               해제
             </button>
@@ -851,7 +847,8 @@ export default function App() {
         )}
       </div>
 
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      {/* Main content - takes remaining space */}
+      <main className={`max-w-5xl mx-auto w-full flex-1 overflow-hidden ${mode === 'flashcard' ? 'px-3 py-2 flex flex-col' : 'px-3 py-3 overflow-y-auto'}`}>
         {filteredItems.length === 0 ? (
           <div className="text-center py-16 text-stone-500">
             <p className="mb-2">카테고리를 하나 이상 선택해주세요.</p>
@@ -876,46 +873,92 @@ export default function App() {
             allItems={DATA}
             onMark={handleMark}
           />
-        ) : (
+        ) : mode === 'search' ? (
           <SearchView
             items={filteredItems}
             progress={progress}
             onMark={handleMark}
           />
+        ) : (
+          <StatsView stats={stats} progress={progress} />
         )}
       </main>
+    </div>
+  );
+}
 
-      <footer className="max-w-5xl mx-auto px-4 mt-6">
-        <div className="bg-white border-2 border-stone-900 rounded-sm p-4 shadow-brut-sm">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-black text-sm tracking-wide">학습 현황</h3>
-            <BarChart3 className="w-4 h-4 text-stone-400" />
+// ========== Stats View ==========
+
+function StatsView({ stats, progress }) {
+  // 카테고리별 진도 계산
+  const catStats = useMemo(() => {
+    return Object.entries(CATEGORIES).map(([cat, c]) => {
+      const items = DATA.filter(d => d.cat === cat);
+      const learned = items.filter(d => progress[d.id]?.status === 'easy').length;
+      return { cat, ...c, total: items.length, learned, pct: Math.round(100 * learned / items.length) };
+    });
+  }, [progress]);
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-4">
+      {/* 전체 통계 카드 */}
+      <div className="bg-white border-2 border-stone-900 rounded-sm p-4 shadow-brut-sm">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-black text-base tracking-wide">전체 진도</h3>
+          <BarChart3 className="w-4 h-4 text-stone-400" />
+        </div>
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div>
+            <div className="text-3xl font-black font-mono text-emerald-600">{stats.learned}</div>
+            <div className="text-[10px] font-mono tracking-wider text-stone-500">LEARNED</div>
           </div>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div>
-              <div className="text-2xl font-black font-mono">{stats.learned}</div>
-              <div className="text-[10px] font-mono tracking-wider text-stone-500">LEARNED</div>
-            </div>
-            <div>
-              <div className="text-2xl font-black font-mono text-amber-600">{stats.reviewing}</div>
-              <div className="text-[10px] font-mono tracking-wider text-stone-500">REVIEWING</div>
-            </div>
-            <div>
-              <div className="text-2xl font-black font-mono text-stone-400">{stats.total - stats.learned - stats.reviewing}</div>
-              <div className="text-[10px] font-mono tracking-wider text-stone-500">NEW</div>
-            </div>
+          <div>
+            <div className="text-3xl font-black font-mono text-amber-600">{stats.reviewing}</div>
+            <div className="text-[10px] font-mono tracking-wider text-stone-500">REVIEWING</div>
           </div>
-          <div className="mt-3 h-2 bg-stone-200 rounded-sm overflow-hidden">
-            <div
-              className="h-full bg-emerald-500 transition-all duration-500"
-              style={{ width: `${stats.pct}%` }}
-            />
-          </div>
-          <div className="mt-3 pt-3 border-t border-stone-100 text-[10px] font-mono text-stone-400 text-center tracking-wider">
-            BETTERWAY SYSTEMS · 인쇄용어 학습 PWA · 280 terms
+          <div>
+            <div className="text-3xl font-black font-mono text-stone-400">{stats.total - stats.learned - stats.reviewing}</div>
+            <div className="text-[10px] font-mono tracking-wider text-stone-500">NEW</div>
           </div>
         </div>
-      </footer>
+        <div className="mt-3 h-3 bg-stone-200 rounded-sm overflow-hidden">
+          <div
+            className="h-full bg-emerald-500 transition-all duration-500"
+            style={{ width: `${stats.pct}%` }}
+          />
+        </div>
+        <div className="mt-1 text-right text-xs font-mono text-stone-500">{stats.pct}% 완료</div>
+      </div>
+
+      {/* 카테고리별 진도 */}
+      <div className="bg-white border-2 border-stone-900 rounded-sm p-4 shadow-brut-sm">
+        <h3 className="font-black text-base tracking-wide mb-3">카테고리별 진도</h3>
+        <div className="space-y-2">
+          {catStats.map(c => (
+            <div key={c.cat}>
+              <div className="flex items-center justify-between mb-0.5">
+                <div className="flex items-center gap-2">
+                  <CategoryBadge cat={c.cat} size="xs" />
+                  <span className="text-xs font-bold">{c.ko}</span>
+                </div>
+                <span className="text-[11px] font-mono text-stone-500">
+                  {c.learned}/{c.total} <span className="text-stone-400">({c.pct}%)</span>
+                </span>
+              </div>
+              <div className="h-1.5 bg-stone-200 rounded-sm overflow-hidden">
+                <div
+                  className="h-full transition-all duration-500"
+                  style={{ width: `${c.pct}%`, backgroundColor: c.color }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="text-[10px] font-mono text-stone-400 text-center tracking-wider pb-4">
+        BETTERWAY SYSTEMS · 인쇄용어 학습 PWA · 280 terms
+      </div>
     </div>
   );
 }
