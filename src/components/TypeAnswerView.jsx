@@ -9,10 +9,62 @@ function normalize(s) {
 }
 
 // 답 후보 추출 (방향별)
+// 슬래시(/), 괄호()로 구분된 복수 답안을 모두 후보로 분해
+function expandAnswerVariants(raw) {
+  if (!raw) return [];
+  const variants = new Set();
+
+  // 원본 그대로
+  variants.add(raw.trim());
+
+  // 슬래시로 분리한 각 부분
+  raw.split('/').forEach(part => {
+    const p = part.trim();
+    if (p) variants.add(p);
+  });
+
+  // 괄호 안 내용과 괄호 밖 내용을 분리
+  // 예: "BID (Binary Ink Developer)" → "BID", "Binary Ink Developer"
+  const outsideParens = raw.replace(/\([^)]*\)/g, '').trim();
+  if (outsideParens) variants.add(outsideParens);
+
+  const parensMatches = raw.matchAll(/\(([^)]+)\)/g);
+  for (const m of parensMatches) {
+    const inside = m[1].trim();
+    if (inside) {
+      variants.add(inside);
+      // 괄호 안에도 슬래시 있으면 더 분리
+      inside.split('/').forEach(p => {
+        const t = p.trim();
+        if (t) variants.add(t);
+      });
+    }
+  }
+
+  // 슬래시 + 괄호 조합: 슬래시 분리 후 각 항목의 괄호 처리
+  raw.split('/').forEach(part => {
+    const p = part.trim();
+    const withoutParens = p.replace(/\([^)]*\)/g, '').trim();
+    if (withoutParens) variants.add(withoutParens);
+  });
+
+  return [...variants].filter(v => v.length > 0);
+}
+
 function getAnswers(item, direction) {
   switch (direction) {
-    case 'ko-to-en': return [item.en_us, item.en_gb, item.en_au].filter(Boolean);
-    case 'en-to-ko': return [item.ko, item.ko_alt].filter(Boolean);
+    case 'ko-to-en': {
+      const raws = [item.en_us, item.en_gb, item.en_au].filter(Boolean);
+      const all = new Set();
+      raws.forEach(r => expandAnswerVariants(r).forEach(v => all.add(v)));
+      return [...all];
+    }
+    case 'en-to-ko': {
+      const raws = [item.ko, item.ko_alt].filter(Boolean);
+      const all = new Set();
+      raws.forEach(r => expandAnswerVariants(r).forEach(v => all.add(v)));
+      return [...all];
+    }
     default: return [];
   }
 }
