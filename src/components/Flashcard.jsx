@@ -83,34 +83,64 @@ function renderFront(item, direction, settings) {
 }
 
 function renderBack(item, direction) {
-  // 뒤면은 정답 + 추가 정보
-  // 'all'은 모든 언어, 단방향은 해당 언어와 한국어 의미
+  // 뒤면 = 정답 + 발음 + 컨텍스트
+  // 단방향 모드에서도 발음이 명확히 보이도록 별도 블록으로 분리
   const blocks = [];
 
   if (direction === 'all') {
     blocks.push({
-      label: '中 CHINESE', main: item.zh, sub: item.zh_pinyin, ttsLang: 'zh', ttsText: item.zh
+      label: '中 CHINESE', main: item.zh, pronun: item.zh_pinyin, ttsLang: 'zh', ttsText: item.zh
     });
     blocks.push({
-      label: '日 JAPANESE', main: item.ja, sub: `${item.ja_kana} · ${item.ja_romaji}`, ttsLang: 'ja', ttsText: item.ja
+      label: '日 JAPANESE', main: item.ja, pronun: `${item.ja_kana} · ${item.ja_romaji}`, ttsLang: 'ja', ttsText: item.ja
     });
     blocks.push({
-      label: 'EN 🇺🇸 US', main: item.en_us, sub: item.en_ipa + (item.en_ko ? ` [${item.en_ko}]` : ''), ttsLang: 'en', ttsText: item.en_us
+      label: 'EN 🇺🇸 US', main: item.en_us, pronun: item.en_ipa + (item.en_ko ? ` [${item.en_ko}]` : ''), ttsLang: 'en', ttsText: item.en_us
     });
   } else if (direction === 'ko-to-zh') {
-    blocks.push({ label: '中 정답', main: item.zh, sub: item.zh_pinyin, ttsLang: 'zh', ttsText: item.zh });
+    blocks.push({
+      label: '中 정답', main: item.zh, pronun: item.zh_pinyin, pronunLabel: '병음', ttsLang: 'zh', ttsText: item.zh, isPrimary: true
+    });
+    // 한국어 뜻을 컨텍스트로
+    blocks.push({
+      label: '韓 의미', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isContext: true
+    });
   } else if (direction === 'ko-to-ja') {
-    blocks.push({ label: '日 정답', main: item.ja, sub: `${item.ja_kana} · ${item.ja_romaji}`, ttsLang: 'ja', ttsText: item.ja });
+    blocks.push({
+      label: '日 정답', main: item.ja, pronun: `${item.ja_kana} · ${item.ja_romaji}`, pronunLabel: '읽기', ttsLang: 'ja', ttsText: item.ja, isPrimary: true
+    });
+    blocks.push({
+      label: '韓 의미', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isContext: true
+    });
   } else if (direction === 'ko-to-en') {
-    blocks.push({ label: 'EN 정답', main: item.en_us, sub: item.en_ipa + (item.en_ko ? ` [${item.en_ko}]` : ''), ttsLang: 'en', ttsText: item.en_us });
+    blocks.push({
+      label: 'EN 정답', main: item.en_us, pronun: item.en_ipa + (item.en_ko ? ` [${item.en_ko}]` : ''), pronunLabel: '발음', ttsLang: 'en', ttsText: item.en_us, isPrimary: true
+    });
+    blocks.push({
+      label: '韓 의미', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isContext: true
+    });
   } else if (direction === 'zh-to-ko') {
-    blocks.push({ label: '韓 정답', main: item.ko, sub: item.ko_hanja || '', ttsLang: 'ko', ttsText: item.ko });
-    blocks.push({ label: '병음', main: item.zh_pinyin, sub: '', ttsLang: null });
+    blocks.push({
+      label: '韓 정답', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isPrimary: true
+    });
+    // 중국어 발음도 확인용으로 다시
+    blocks.push({
+      label: '中 (참고)', main: item.zh, pronun: item.zh_pinyin, pronunLabel: '병음', ttsLang: 'zh', ttsText: item.zh, isContext: true
+    });
   } else if (direction === 'ja-to-ko') {
-    blocks.push({ label: '韓 정답', main: item.ko, sub: item.ko_hanja || '', ttsLang: 'ko', ttsText: item.ko });
-    blocks.push({ label: '읽기', main: `${item.ja_kana} · ${item.ja_romaji}`, sub: '', ttsLang: null });
+    blocks.push({
+      label: '韓 정답', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isPrimary: true
+    });
+    blocks.push({
+      label: '日 (참고)', main: item.ja, pronun: `${item.ja_kana} · ${item.ja_romaji}`, pronunLabel: '읽기', ttsLang: 'ja', ttsText: item.ja, isContext: true
+    });
   } else if (direction === 'en-to-ko') {
-    blocks.push({ label: '韓 정답', main: item.ko, sub: item.ko_hanja || '', ttsLang: 'ko', ttsText: item.ko });
+    blocks.push({
+      label: '韓 정답', main: item.ko, pronun: item.ko_hanja, ttsLang: 'ko', ttsText: item.ko, isPrimary: true
+    });
+    blocks.push({
+      label: 'EN (참고)', main: item.en_us, pronun: item.en_ipa + (item.en_ko ? ` [${item.en_ko}]` : ''), pronunLabel: '발음', ttsLang: 'en', ttsText: item.en_us, isContext: true
+    });
   }
 
   return blocks;
@@ -232,24 +262,44 @@ export default function Flashcard({
           </div>
         ) : (
           /* 뒤면 */
-          <div className="p-4 pt-6 space-y-2.5 flex-1 overflow-y-auto">
+          <div className="p-4 pt-6 space-y-3 flex-1 overflow-y-auto">
             {backBlocks.map((b, i) => (
-              <div key={i} className="border-b border-stone-200 pb-2">
-                <div className="flex items-baseline justify-between mb-0.5">
-                  <span className="text-[10px] font-mono tracking-[0.2em] text-stone-400">{b.label}</span>
+              <div key={i} className={`pb-2 ${i < backBlocks.length - 1 ? 'border-b border-stone-200' : ''}`}>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className={`text-[10px] font-mono tracking-[0.2em] ${
+                    b.isPrimary ? 'text-stone-700 font-bold' :
+                    b.isContext ? 'text-stone-400' :
+                    'text-stone-500'
+                  }`}>
+                    {b.label}
+                  </span>
                   {b.ttsLang && isTTSAvailable() && (
                     <button
                       onClick={(e) => handlePlay(b.ttsLang, b.ttsText, e)}
-                      className="p-1 text-stone-400 hover:text-stone-700"
+                      className="p-1 text-stone-500 active:text-stone-900"
                       aria-label="듣기"
                     >
-                      <Volume2 className="w-3.5 h-3.5" />
+                      <Volume2 className="w-4 h-4" />
                     </button>
                   )}
                 </div>
-                <div className="text-xl font-bold leading-tight">{b.main}</div>
-                {b.sub && (
-                  <div className="text-xs text-stone-500 font-mono">{b.sub}</div>
+
+                <div className={`font-bold leading-tight ${b.isPrimary ? 'text-2xl' : 'text-base'}`}>
+                  {b.main}
+                </div>
+
+                {/* 발음/병음/가나를 별도 라인으로 명확하게 */}
+                {b.pronun && (
+                  <div className="mt-1 flex items-baseline gap-2">
+                    {b.pronunLabel && (
+                      <span className="text-[10px] font-mono tracking-wider text-stone-400 uppercase">
+                        {b.pronunLabel}
+                      </span>
+                    )}
+                    <span className={`font-mono italic ${b.isPrimary ? 'text-base text-stone-700' : 'text-sm text-stone-500'}`}>
+                      {b.pronun}
+                    </span>
+                  </div>
                 )}
               </div>
             ))}
