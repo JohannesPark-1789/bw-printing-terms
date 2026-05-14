@@ -740,7 +740,7 @@ export default function App() {
   }, [progress]);
 
   return (
-    <div className="h-screen bg-stone-100 flex flex-col overflow-hidden">
+    <div className="bg-stone-100 flex flex-col overflow-hidden app-root">
       {/* PWA 설치 배너 */}
       {!installDismissed && <InstallBanner onDismiss={dismissInstall} />}
 
