@@ -339,7 +339,7 @@ export default function App() {
 
       {/* 본문 */}
       <main className={`max-w-5xl mx-auto w-full flex-1 overflow-hidden ${
-        mode === 'flashcard' ? 'px-3 py-2 flex flex-col' : 'px-3 py-3 overflow-y-auto'
+        (mode === 'flashcard' || mode === 'quiz') ? 'px-3 py-2 flex flex-col' : 'px-3 py-3 overflow-y-auto'
       }`}>
         {mode === 'flashcard' ? (
           queueData.queue.length === 0 ? (
