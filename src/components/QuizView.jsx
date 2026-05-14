@@ -97,63 +97,67 @@ export default function QuizView({ items, allItems, onAnswer }) {
   const q = getQuestionText(quizQ.correct);
 
   return (
-    <div className="max-w-2xl mx-auto pb-4">
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {[
-          { val: 'ko-to-en', label: '한→英' },
-          { val: 'ko-to-ja', label: '한→日' },
-          { val: 'ko-to-zh', label: '한→中' },
-          { val: 'en-to-ko', label: '英→한' },
-          { val: 'ja-to-ko', label: '日→한' },
-          { val: 'zh-to-ko', label: '中→한' },
-        ].map(d => (
-          <button
-            key={d.val}
-            onClick={() => setDirection(d.val)}
-            className={`px-2.5 py-1 text-xs font-mono font-bold tracking-wider rounded-sm border ${
-              direction === d.val
-                ? 'bg-stone-900 text-white border-stone-900'
-                : 'bg-white text-stone-700 border-stone-300'
-            }`}
-          >
-            {d.label}
-          </button>
-        ))}
-        <div className="ml-auto font-mono text-[11px] flex items-center gap-2 px-2 py-1 bg-white border border-stone-300 rounded-sm">
-          <span className="text-stone-500">SCORE</span>
+    <div className="max-w-2xl mx-auto flex flex-col h-full">
+      {/* 방향 + 점수 - 한 줄 가로 스크롤 */}
+      <div className="mb-2 flex items-center gap-1.5 flex-shrink-0">
+        <div className="flex gap-1 overflow-x-auto flex-1 -mx-1 px-1 pb-0.5">
+          {[
+            { val: 'ko-to-en', label: '한→英' },
+            { val: 'ko-to-ja', label: '한→日' },
+            { val: 'ko-to-zh', label: '한→中' },
+            { val: 'en-to-ko', label: '英→한' },
+            { val: 'ja-to-ko', label: '日→한' },
+            { val: 'zh-to-ko', label: '中→한' },
+          ].map(d => (
+            <button
+              key={d.val}
+              onClick={() => setDirection(d.val)}
+              className={`flex-shrink-0 px-2 py-1 text-[11px] font-mono font-bold tracking-wider rounded-sm border ${
+                direction === d.val
+                  ? 'bg-stone-900 text-white border-stone-900'
+                  : 'bg-white text-stone-700 border-stone-300'
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+        <div className="font-mono text-[10px] flex items-center gap-1 px-1.5 py-1 bg-white border border-stone-300 rounded-sm flex-shrink-0">
           <span className="font-black">{score.correct}/{score.total}</span>
           {score.total > 0 && (
-            <span className="text-stone-500">({Math.round(100 * score.correct / score.total)}%)</span>
+            <span className="text-stone-500">{Math.round(100 * score.correct / score.total)}%</span>
           )}
         </div>
       </div>
 
-      <div className="bg-white border-2 border-stone-900 rounded-sm shadow-brut p-6 mb-4 relative">
-        <div className="absolute top-0 left-0 right-0 h-1.5" style={{ backgroundColor: CATEGORIES[quizQ.correct.cat].color }} />
-        <div className="flex items-center justify-between mb-3 pt-1">
-          <CategoryBadge cat={quizQ.correct.cat} size="sm" />
+      {/* 문제 카드 - 컴팩트 */}
+      <div className="bg-white border-2 border-stone-900 rounded-sm shadow-brut p-3 pt-4 mb-2 relative flex-shrink-0">
+        <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: CATEGORIES[quizQ.correct.cat].color }} />
+        <div className="flex items-center justify-between mb-1">
+          <CategoryBadge cat={quizQ.correct.cat} size="xs" />
           <span className="text-[10px] font-mono tracking-[0.2em] text-stone-400">{q.label}</span>
         </div>
-        <h2 className="text-4xl font-black tracking-tight text-center my-4 break-keep">
+        <h2 className="text-3xl font-black tracking-tight text-center my-2 break-keep leading-tight">
           {q.main}
         </h2>
         {q.sub && (
-          <div className="text-center text-stone-500 text-base">{q.sub}</div>
+          <div className="text-center text-stone-500 text-sm">{q.sub}</div>
         )}
         {isTTSAvailable() && q.ttsLang && (
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center mt-1">
             <button
               onClick={() => speak(q.ttsText, q.ttsLang)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-mono tracking-wider bg-stone-100 text-stone-700 rounded-sm"
+              className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-mono tracking-wider bg-stone-100 text-stone-700 rounded-sm"
             >
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-3 h-3" />
               듣기
             </button>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-2">
+      {/* 보기 - 컴팩트 + 스크롤 가능 영역 */}
+      <div className="grid grid-cols-1 gap-1.5 flex-1 min-h-0 overflow-y-auto">
         {quizQ.options.map((opt, i) => {
           const isCorrect = opt.id === quizQ.correct.id;
           const isSelected = selectedAnswer?.id === opt.id;
@@ -168,40 +172,41 @@ export default function QuizView({ items, allItems, onAnswer }) {
               key={opt.id}
               onClick={() => handleAnswer(opt)}
               disabled={answered}
-              className={`p-3 border-2 rounded-sm text-left transition-all ${style}`}
+              className={`px-3 py-2 border-2 rounded-sm text-left transition-all ${style}`}
             >
-              <div className="flex items-start gap-3">
-                <span className="font-mono text-xs font-bold text-stone-400 mt-0.5">{String.fromCharCode(65 + i)}</span>
-                <div className="flex-1">
-                  <div className="font-bold text-base">{getOptionText(opt)}</div>
+              <div className="flex items-start gap-2">
+                <span className="font-mono text-[11px] font-bold text-stone-400 mt-1">{String.fromCharCode(65 + i)}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-sm leading-tight">{getOptionText(opt)}</div>
                   {answered && getOptionSub(opt) && (
-                    <div className="text-xs text-stone-500 mt-0.5 font-mono">{getOptionSub(opt)}</div>
+                    <div className="text-[11px] text-stone-500 mt-0.5 font-mono">{getOptionSub(opt)}</div>
                   )}
                 </div>
-                {answered && isCorrect && <Check className="w-5 h-5 text-emerald-600" />}
-                {answered && isSelected && !isCorrect && <X className="w-5 h-5 text-rose-600" />}
+                {answered && isCorrect && <Check className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-1" />}
+                {answered && isSelected && !isCorrect && <X className="w-4 h-4 text-rose-600 flex-shrink-0 mt-1" />}
               </div>
             </button>
           );
         })}
       </div>
 
+      {/* 답변 후: 노트 + 다음 문제 버튼 - 하단 고정 */}
       {answered && (
-        <div className="mt-4 space-y-2">
+        <div className="mt-2 space-y-1.5 flex-shrink-0">
           {quizQ.correct.note && (
-            <div className="bg-stone-100 border-l-4 border-stone-900 p-3 text-sm text-stone-700">
+            <div className="bg-stone-100 border-l-4 border-stone-900 px-2 py-1.5 text-xs text-stone-700 leading-snug">
               💡 {quizQ.correct.note}
             </div>
           )}
           {(quizQ.correct.en_gb || quizQ.correct.en_au) && (
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-3 text-sm">
+            <div className="bg-amber-50 border-l-4 border-amber-500 px-2 py-1.5 text-xs leading-snug">
               {quizQ.correct.en_gb && <div><span className="font-bold">🇬🇧 UK:</span> {quizQ.correct.en_gb}</div>}
               {quizQ.correct.en_au && <div><span className="font-bold">🇦🇺 AU:</span> {quizQ.correct.en_au}</div>}
             </div>
           )}
           <button
             onClick={nextQuestion}
-            className="w-full py-3 bg-stone-900 text-white font-bold rounded-sm"
+            className="w-full py-2.5 bg-stone-900 active:bg-stone-700 text-white font-bold text-sm rounded-sm"
           >
             다음 문제 →
           </button>
