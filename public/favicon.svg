@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#1c1917" rx="8"/>
+  <text x="32" y="42" font-family="serif" font-size="36" font-weight="900" fill="#f5f5f4" text-anchor="middle">印</text>
+  <circle cx="14" cy="14" r="2.5" fill="#00AEEF"/>
+  <circle cx="22" cy="14" r="2.5" fill="#EC008C"/>
+  <circle cx="30" cy="14" r="2.5" fill="#FFF200"/>
+  <circle cx="38" cy="14" r="2.5" fill="#f5f5f4"/>
+</svg>
