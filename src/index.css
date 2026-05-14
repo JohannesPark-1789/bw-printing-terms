@@ -6,18 +6,26 @@
   html {
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
+    height: 100%;
+    height: -webkit-fill-available;
   }
 
   body {
     font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     overscroll-behavior-y: none;
     background-color: #f5f5f4;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    margin: 0;
   }
 
-  /* iOS 安全영역 대응 */
-  body {
+  #root {
+    /* iOS 안전영역 대응 */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    box-sizing: border-box;
   }
 
   /* 입력 필드 iOS 줌 방지 */
@@ -25,6 +33,17 @@
   textarea,
   select {
     font-size: 16px;
+  }
+}
+
+@layer components {
+  /* PWA 풀스크린에서 정확한 높이 계산 */
+  .app-root {
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport: iOS Safari PWA에서 정확함 */
+    height: -webkit-fill-available;
+    /* safe-area 빼기 */
+    max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 }
 
